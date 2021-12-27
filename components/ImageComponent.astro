@@ -1,0 +1,18 @@
+---
+import phim from '../phim_core.mjs';
+import {resolve as pathResolve} from 'path';
+
+let rootDir = pathResolve('./public');
+const {processUrl} = phim({rootDir: rootDir});
+
+let {filename = false, src = false, alt = "", css_class = ""} = Astro.props;
+
+// Process with Phim
+let {im_info, transforms} = await processUrl(src);
+---
+<picture>
+    {transforms.map((x) => (
+        <source type={x.mime} srcset={x.file+" "+x.w+"w"} media={x.media}>
+    ))}
+    <img src={'/__phim/'+im_info.filename} class={css_class} alt={alt}/>
+</picture>
